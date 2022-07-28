@@ -59,7 +59,7 @@ func TestG722Payloader(t *testing.T) {
 	}
 
 	// Positive MTU, small payload
-	res = p.Payload(uint16(len(payload)-1), payload)
+	res = p.Payload(uint(len(payload)-1), payload)
 	if len(res) != len(payload)-1 {
 		t.Fatal("Generated payload should be the same smaller than original payload size")
 	}

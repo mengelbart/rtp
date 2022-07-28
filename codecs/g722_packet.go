@@ -4,7 +4,7 @@ package codecs
 type G722Payloader struct{}
 
 // Payload fragments an G722 packet across one or more byte arrays
-func (p *G722Payloader) Payload(mtu uint16, payload []byte) [][]byte {
+func (p *G722Payloader) Payload(mtu uint, payload []byte) [][]byte {
 	var out [][]byte
 	if payload == nil || mtu == 0 {
 		return out

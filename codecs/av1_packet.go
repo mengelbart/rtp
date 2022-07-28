@@ -25,7 +25,7 @@ type AV1Payloader struct{}
 
 // Payload fragments a AV1 packet across one or more byte arrays
 // See AV1Packet for description of AV1 Payload Header
-func (p *AV1Payloader) Payload(mtu uint16, payload []byte) (payloads [][]byte) {
+func (p *AV1Payloader) Payload(mtu uint, payload []byte) (payloads [][]byte) {
 	maxFragmentSize := int(mtu) - av1PayloaderHeadersize - 2
 	payloadDataRemaining := len(payload)
 	payloadDataIndex := 0

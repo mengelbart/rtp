@@ -13,7 +13,7 @@ func TestPacketizer(t *testing.T) {
 	multiplepayload := make([]byte, 128)
 	// use the G722 payloader here, because it's very simple and all 0s is valid G722 data.
 	packetizer := NewPacketizer(100, 98, 0x1234ABCD, &codecs.G722Payloader{}, NewRandomSequencer(), 90000)
-	packets := packetizer.Packetize(multiplepayload, 2000)
+	packets := packetizer.Packetize(100, multiplepayload, 2000)
 
 	if len(packets) != 2 {
 		packetlengths := ""
@@ -40,7 +40,7 @@ func TestPacketizer_AbsSendTime(t *testing.T) {
 	pktizer.EnableAbsSendTime(1)
 
 	payload := []byte{0x11, 0x12, 0x13, 0x14}
-	packets := pktizer.Packetize(payload, 2000)
+	packets := pktizer.Packetize(100, payload, 2000)
 
 	expected := &Packet{
 		Header: Header{
@@ -75,7 +75,7 @@ func TestPacketizer_AbsSendTime(t *testing.T) {
 func TestPacketizer_Roundtrip(t *testing.T) {
 	multiplepayload := make([]byte, 128)
 	packetizer := NewPacketizer(100, 98, 0x1234ABCD, &codecs.G722Payloader{}, NewRandomSequencer(), 90000)
-	packets := packetizer.Packetize(multiplepayload, 1000)
+	packets := packetizer.Packetize(100, multiplepayload, 1000)
 
 	rawPkts := make([][]byte, 0, 1400)
 	for _, pkt := range packets {

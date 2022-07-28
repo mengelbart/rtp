@@ -6,18 +6,17 @@ import (
 
 // Payloader payloads a byte array for use as rtp.Packet payloads
 type Payloader interface {
-	Payload(mtu uint16, payload []byte) [][]byte
+	Payload(mtu uint, payload []byte) [][]byte
 }
 
 // Packetizer packetizes a payload
 type Packetizer interface {
-	Packetize(payload []byte, samples uint32) []*Packet
+	Packetize(mtu uint, payload []byte, samples uint32) []*Packet
 	EnableAbsSendTime(value int)
 	SkipSamples(skippedSamples uint32)
 }
 
 type packetizer struct {
-	MTU              uint16
 	PayloadType      uint8
 	SSRC             uint32
 	Payloader        Payloader
@@ -31,9 +30,8 @@ type packetizer struct {
 }
 
 // NewPacketizer returns a new instance of a Packetizer for a specific payloader
-func NewPacketizer(mtu uint16, pt uint8, ssrc uint32, payloader Payloader, sequencer Sequencer, clockRate uint32) Packetizer {
+func NewPacketizer(pt uint8, ssrc uint32, payloader Payloader, sequencer Sequencer, clockRate uint32) Packetizer {
 	return &packetizer{
-		MTU:         mtu,
 		PayloadType: pt,
 		SSRC:        ssrc,
 		Payloader:   payloader,
@@ -49,13 +47,13 @@ func (p *packetizer) EnableAbsSendTime(value int) {
 }
 
 // Packetize packetizes the payload of an RTP packet and returns one or more RTP packets
-func (p *packetizer) Packetize(payload []byte, samples uint32) []*Packet {
+func (p *packetizer) Packetize(mtu uint, payload []byte, samples uint32) []*Packet {
 	// Guard against an empty payload
 	if len(payload) == 0 {
 		return nil
 	}
 
-	payloads := p.Payloader.Payload(p.MTU-12, payload)
+	payloads := p.Payloader.Payload(mtu, payload)
 	packets := make([]*Packet, len(payloads))
 
 	for i, pp := range payloads {

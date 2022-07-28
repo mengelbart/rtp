@@ -23,7 +23,7 @@ const (
 )
 
 // Payload fragments an VP9 packet across one or more byte arrays
-func (p *VP9Payloader) Payload(mtu uint16, payload []byte) [][]byte {
+func (p *VP9Payloader) Payload(mtu uint, payload []byte) [][]byte {
 	/*
 	 * https://www.ietf.org/id/draft-ietf-payload-vp9-13.txt
 	 *
